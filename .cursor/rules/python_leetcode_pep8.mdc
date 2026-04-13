@@ -1,0 +1,61 @@
+---
+description: PEP 8 and LeetCode-prep Python conventions (leet_code_prep style)
+globs: "**/*.py"
+alwaysApply: false
+---
+
+# Python rules for LeetCode-style solutions
+
+## PEP 8 baseline
+
+- **Indentation**: 4 spaces per level. No tabs.
+- **Line length**: Prefer **79** characters for code and **72** for flowing text in docstrings/comments (PEP 8). If the repo already uses **88** with a formatter, stay consistent with nearby files.
+- **Imports**: One module per line. Group order: (1) future, (2) standard library, (3) third party, (4) local — blank line between groups. Prefer absolute imports. Use `from typing import ...` for annotations used in signatures (`List`, `Dict`, `Optional`, `Tuple`, etc.).
+- **Whitespace**: One space around `=` in assignments (not in keyword args). No space inside `()`, `[]`, `{}` for empty or single-element tuple disambiguation. Two blank lines before top-level `class`/`def`; one blank line between methods.
+- **Naming**: `snake_case` for functions, methods, variables, and modules; `PascalCase` for classes; `UPPER_SNAKE` for constants. **Exception**: keep **LeetCode stub method names** exactly as specified (often `camelCase`, e.g. `removeDuplicates`) so solutions paste cleanly into the judge.
+- **Truthiness**: Prefer `if seq:` over `if len(seq) > 0:` where appropriate; avoid comparing to `True`/`False` with `==`.
+- **Comparisons**: Use `is` / `is not` for singletons (`None`, `True`, `False`).
+
+## File layout and naming
+
+- **Filename**: `{leetcode_number}_{short_snake_case_topic}.py` (e.g. `703_kth_largest_element.py`, `26_remove_duplicates_from_sorted_arr.py`). Use lowercase and underscores.
+- **Order**: module docstring → imports → primary `class` / API → optional commented LeetCode boilerplate → tests → `if __name__ == "__main__":`.
+
+## Module docstring (required style)
+
+Match the existing prep-repo pattern:
+
+1. First line: `"""<number>. <Exact LeetCode title>.`
+2. Blank line, then 1–3 short lines describing the task (enough to orient without copying the full statement).
+3. Optional `Example:` line with a minimal concrete case.
+4. Closing `"""` on its own line after a blank line before the first import.
+
+Use straight quotes and backticks around identifiers in prose only when it aids clarity (e.g. `` `nums` ``).
+
+## Solution shape
+
+- **Classic problems**: `class Solution:` with methods as LeetCode defines them. Type hints on parameters and return values when they clarify intent.
+- **Design / stream problems**: Top-level or nested class named as in the problem (e.g. `KthLargest`). Use **snake_case** for your own helpers; keep public API names judge-compatible.
+- Prefer **stdlib** and well-known patterns (`heapq`, `collections`, `bisect`) over heavy dependencies unless the file already uses something else.
+- Add brief **time/space complexity** in a comment only when it helps review or the algorithm is non-obvious.
+
+## Local tests (bottom of file)
+
+- Name: `def test_<descriptive_snake>()`; add `-> None` when there is no return value.
+- Use plain `assert` with an **`f"…{var}…"`** message explaining expected vs actual (see `703_kth_largest_element.py`).
+- Cover: problem examples, small edge cases (empty, single element, duplicates, bounds).
+- End with `print("All … passed.")` or similar once per test function if you want a quick manual run signal.
+- Guard execution: `if __name__ == "__main__": test_...()`.
+
+Optional: a short `# ===` banner comment before tests when the file mixes a long solution with many cases (e.g. `26_remove_duplicates_from_sorted_arr.py`).
+
+## What to avoid
+
+- Wildcard imports (`from module import *`).
+- Mutable default arguments (`def f(x=[]):`).
+- Silencing errors broadly (`except:`); be specific if you need `try`/`except` in exploratory code.
+- Drive-by refactors of unrelated code when only one solution file is in scope.
+
+## Consistency
+
+When editing an existing file, **match** its naming, comment density, and test style rather than imposing a different sub-style from another directory in the same repo.
