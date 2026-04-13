@@ -1,0 +1,44 @@
+---
+description: C++17 style, safety, and performance defaults for this repo
+globs: "**/*.cpp,**/*.hpp,**/*.h,**/*.cc,**/*.cxx"
+alwaysApply: false
+---
+
+# C++17 engineering rules (default)
+
+## Language
+
+- Target **C++17**. Do not use C++20+ features unless the user explicitly asks.
+
+## Style
+
+- **Types**: `PascalCase` (e.g. `Solution`, `HttpClient`).
+- **Functions and locals**: `snake_case` (e.g. `remove_duplicates`, `write_idx`).
+- **Private members**: trailing underscore (e.g. `count_`) for clarity vs locals.
+- No `using namespace std;` in headers. Avoid it in `.cpp` unless the user insists.
+- Use `auto` only when the type is obvious from the RHS or it removes real noise without hiding important types.
+
+## Correctness and safety
+
+- Prefer **RAII**. Prefer `std::unique_ptr` for exclusive ownership; use `std::shared_ptr` only when shared ownership is required.
+- Avoid raw owning `new` / `delete` in normal code.
+- Avoid **undefined behavior**. Do not rely on signed overflow. Prefer consistent index/size types; be explicit when mixing signed and unsigned (`static_cast`, or use `std::size_t` throughout loops when indexing containers).
+- Mark methods **`const`** when they do not mutate observable object state.
+
+## Performance
+
+- Prefer the right **algorithm and container** first. Avoid repeated reallocations when the final size is known (`reserve` on `vector` when appropriate).
+- Do not micro-optimize without a stated bottleneck or measured profile.
+
+## Standard library
+
+- Prefer **STL** containers and algorithms (`vector`, `string`, `unordered_map`, `optional`, `variant`, etc.) over hand-rolled equivalents unless there is a clear reason.
+
+## Files
+
+- Headers should be **self-contained** (include what you use). Use include guards or `#pragma once` consistently with existing project files.
+
+## Output expectations
+
+- For non-trivial algorithms, add brief **time/space complexity** in comments when helpful.
+- Prefer **readable** code over cleverness. Match naming and structure of nearby code in the same file or directory.
